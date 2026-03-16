@@ -1,0 +1,31 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+
+# Local analysis outputs
+analysis/
+outputs/
+runs/
+cache/
+tmp/
+
+# Media and large artifacts
+data/
+assets/raw/
+assets/generated/
+*.mp4
+*.mov
+*.mkv
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# macOS and editor clutter
+.idea/
+.vscode/
