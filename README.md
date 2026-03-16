@@ -29,6 +29,7 @@ The project is centered on a hybrid workflow:
 - `docs/evaluation-rubric.md`: still-frame and production scoring rubric
 - `docs/cloud-strategy.md`: local vs cloud execution guidance
 - `docs/interview-content-map.md`: transcript-derived chapters, hero clips, and densification targets
+- `docs/flux2-klein-v0-runbook.md`: exact steps to rebuild the paired dataset and launch the first serious training run
 - `manifests/`: CSV templates and generated pair manifests
 - `configs/experiments/`: experiment specs for training runs
 - `configs/ai-toolkit/`: concrete ai-toolkit training configs
