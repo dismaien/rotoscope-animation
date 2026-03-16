@@ -31,6 +31,11 @@ This report captures the overnight work completed toward a painterly rotoscope `
   - `/Users/leona/Documents/Playground/painterly-rotoscope-animation/docs/flux2-klein-v0-runbook.md`
   - `/Users/leona/Documents/Playground/painterly-rotoscope-animation/tools/prepare_ai_toolkit_paired_dataset.py`
   - `/Users/leona/Documents/Playground/painterly-rotoscope-animation/tools/check_gcp_training_readiness.sh`
+- Follow-up research package for stronger model choices:
+  - `/Users/leona/Documents/Playground/painterly-rotoscope-animation/docs/research-update-2026-03-17.md`
+  - `/Users/leona/Documents/Playground/painterly-rotoscope-animation/docs/kontext-vs-klein-benchmark.md`
+  - `/Users/leona/Documents/Playground/painterly-rotoscope-animation/configs/ai-toolkit/flux-kontext-dev-paired-lora-pilot.yaml`
+  - `/Users/leona/Documents/Playground/painterly-rotoscope-animation/configs/ai-toolkit/qwen-image-edit-2509-paired-lora-pilot.yaml`
 
 ## Most Important Outputs To Review First
 
@@ -44,6 +49,8 @@ This report captures the overnight work completed toward a painterly rotoscope `
 8. `/Users/leona/Documents/Playground/painterly-rotoscope-animation/analysis/motion_tests/segment_0166_0171/hold_blend_mci_triptych.mp4`
 9. `/Users/leona/Documents/Playground/painterly-rotoscope-animation/analysis/motion_tests/segment_0166_0171/hold_12fps.mp4`
 10. `/Users/leona/Documents/Playground/painterly-rotoscope-animation/docs/interview-content-map.md`
+11. `/Users/leona/Documents/Playground/painterly-rotoscope-animation/docs/kontext-vs-klein-benchmark.md`
+12. `/Users/leona/Documents/Playground/painterly-rotoscope-animation/docs/research-update-2026-03-17.md`
 
 ## Recommended Content Targets
 
@@ -99,6 +106,7 @@ Important:
 - In the current shell environment, `gcloud` is not available on `PATH`, so the new readiness check cannot inspect auth/project/API status from here.
 - Earlier checks in a different shell context also showed the visible project was not yet ready for GPU training because required APIs were disabled.
 - A local `FLUX.2 klein 9B` training run on the Mac is not the recommended production path.
+- The model recommendation has shifted slightly after the research update: `FLUX.1 Kontext [dev]` now looks like the best first paired-edit benchmark, with `FLUX.2 klein 9B` still the best direct fallback and `Qwen-Image-Edit-2509` the strongest future research branch.
 - The styled anchor folder has numbering gaps around `frame_0774` and `frame_0775`; the dense clip tooling now supports falling back to the rendered `1 fps` styled video for missing anchor frames.
 
 ## In Progress
