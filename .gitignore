@@ -1,5 +1,6 @@
 .DS_Store
 .venv/
+.venv-*/
 __pycache__/
 *.pyc
 
@@ -29,3 +30,6 @@ assets/generated/
 # macOS and editor clutter
 .idea/
 .vscode/
+
+# Local cloned dependencies
+external/
