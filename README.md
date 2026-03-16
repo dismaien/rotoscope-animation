@@ -28,13 +28,19 @@ The project is centered on a hybrid workflow:
 - `docs/benchmark-plan.md`: benchmark panel design and candidate matrix
 - `docs/evaluation-rubric.md`: still-frame and production scoring rubric
 - `docs/cloud-strategy.md`: local vs cloud execution guidance
+- `docs/interview-content-map.md`: transcript-derived chapters, hero clips, and densification targets
 - `manifests/`: CSV templates and generated pair manifests
 - `configs/experiments/`: experiment specs for training runs
+- `configs/ai-toolkit/`: concrete ai-toolkit training configs
 - `configs/prompts/`: prompt templates and style language
 - `tools/mine_mouth_shapes.py`: candidate miner for rare speaking shapes
 - `tools/mine_mouth_shapes_from_frames.py`: faster miner that works from extracted keyframes
 - `tools/build_pair_manifest.py`: match source and styled frame pairs into a review CSV
 - `tools/extract_frames_from_csv.py`: pull timestamped screenshots from a CSV list
+- `tools/render_motion_tests.py`: render hold/blend/mci/EbSynth comparison clips for a segment
+- `tools/transcribe_with_mlx_whisper.py`: local transcript helper for the interview
+- `tools/prepare_ai_toolkit_paired_dataset.py`: convert paired CSVs into ai-toolkit train/val/holdout folders
+- `tools/generate_dense_gemini_clip.py`: bounded dense-anchor generation for short hero clips
 - `configs/`: reserved for training and inference configs
 
 ## Notes
