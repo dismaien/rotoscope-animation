@@ -13,6 +13,7 @@ import base64
 import json
 import os
 import subprocess
+import tempfile
 import time
 import urllib.request
 from pathlib import Path
@@ -34,6 +35,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-video", required=True, type=Path)
     parser.add_argument("--anchor-dir", required=True, type=Path)
+    parser.add_argument("--anchor-video", type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--start-sec", required=True, type=int)
     parser.add_argument("--duration-sec", required=True, type=int)
@@ -48,6 +50,18 @@ def parse_args() -> argparse.Namespace:
 def run(cmd: list[str]) -> None:
     print("+", " ".join(str(c) for c in cmd), flush=True)
     subprocess.run(cmd, check=True)
+
+
+def normalize_image_bytes(image_bytes: bytes, output_path: Path) -> None:
+    if image_bytes.startswith(b"\x89PNG\r\n\x1a\n"):
+        output_path.write_bytes(image_bytes)
+        return
+
+    suffix = ".jpg" if image_bytes.startswith(b"\xff\xd8\xff") else ".img"
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_input = Path(tmpdir) / f"raw{suffix}"
+        tmp_input.write_bytes(image_bytes)
+        run(["ffmpeg", "-y", "-i", str(tmp_input), str(output_path)])
 
 
 def extract_inputs(source_video: Path, start: int, duration: int, fps: int, outdir: Path) -> list[Path]:
@@ -92,6 +106,26 @@ def extract_audio(source_video: Path, start: int, duration: int, outpath: Path) 
     )
 
 
+def extract_anchor_fallback_frames(anchor_video: Path, start: int, duration: int, outdir: Path) -> None:
+    outdir.mkdir(parents=True, exist_ok=True)
+    run(
+        [
+            "ffmpeg",
+            "-y",
+            "-ss",
+            str(start),
+            "-i",
+            str(anchor_video),
+            "-t",
+            str(duration),
+            "-an",
+            "-vf",
+            "fps=1",
+            str(outdir / "frame_%04d.png"),
+        ]
+    )
+
+
 def request_image(api_key: str, model: str, prompt: str, image_path: Path, output_path: Path) -> bool:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     image_data = base64.b64encode(image_path.read_bytes()).decode("utf-8")
@@ -124,7 +158,7 @@ def request_image(api_key: str, model: str, prompt: str, image_path: Path, outpu
 
     for part in result.get("candidates", [{}])[0].get("content", {}).get("parts", []):
         if "inlineData" in part:
-            output_path.write_bytes(base64.b64decode(part["inlineData"]["data"]))
+            normalize_image_bytes(base64.b64decode(part["inlineData"]["data"]), output_path)
             return True
     print(f"No image returned for {image_path.name}", flush=True)
     return False
@@ -137,10 +171,17 @@ def interleave_frames(
     duration_sec: int,
     fps: int,
     output_dir: Path,
+    anchor_fallback_dir: Path | None = None,
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     for second in range(start_sec, start_sec + duration_sec):
         anchor = anchor_dir / f"frame_{second:04d}.png"
+        if not anchor.exists():
+            if anchor_fallback_dir is None:
+                raise FileNotFoundError(f"Missing anchor frame {anchor}")
+            anchor = anchor_fallback_dir / f"frame_{second - start_sec + 1:04d}.png"
+            if not anchor.exists():
+                raise FileNotFoundError(f"Missing fallback anchor frame {anchor}")
         local_sec = second - start_sec
         for sub in range(fps):
             out_idx = local_sec * fps + sub + 1
@@ -159,6 +200,12 @@ def interleave_frames(
 
 
 def render_preview(frames_dir: Path, audio_path: Path, fps: int, output_path: Path) -> None:
+    normalized_dir = frames_dir.parent / "preview_frames_normalized"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    for src in sorted(frames_dir.glob("frame_*.png")):
+        dst = normalized_dir / src.name
+        run(["ffmpeg", "-y", "-i", str(src), str(dst)])
+
     temp_video = output_path.with_suffix(".video.mp4")
     run(
         [
@@ -167,7 +214,7 @@ def render_preview(frames_dir: Path, audio_path: Path, fps: int, output_path: Pa
             "-framerate",
             str(fps),
             "-i",
-            str(frames_dir / "frame_%04d.png"),
+            str(normalized_dir / "frame_%04d.png"),
             "-c:v",
             "libx264",
             "-preset",
@@ -206,11 +253,25 @@ def main() -> None:
     inputs_dir = args.output_dir / "inputs"
     dense_dir = args.output_dir / "generated"
     preview_dir = args.output_dir / "preview_frames"
+    anchor_fallback_dir = args.output_dir / "anchor_fallback"
     audio_path = args.output_dir / "audio.m4a"
     dense_dir.mkdir(parents=True, exist_ok=True)
 
     source_frames = extract_inputs(args.source_video, args.start_sec, args.duration_sec, args.fps, inputs_dir)
     extract_audio(args.source_video, args.start_sec, args.duration_sec, audio_path)
+    missing_anchors = [
+        args.anchor_dir / f"frame_{second:04d}.png"
+        for second in range(args.start_sec, args.start_sec + args.duration_sec)
+        if not (args.anchor_dir / f"frame_{second:04d}.png").exists()
+    ]
+    if missing_anchors:
+        if args.anchor_video is None:
+            missing_sample = ", ".join(path.name for path in missing_anchors[:5])
+            raise FileNotFoundError(
+                "Missing anchor frames in anchor dir and no --anchor-video fallback was provided: "
+                f"{missing_sample}"
+            )
+        extract_anchor_fallback_frames(args.anchor_video, args.start_sec, args.duration_sec, anchor_fallback_dir)
 
     to_generate: list[tuple[Path, Path, int, int]] = []
     for frame_idx, input_path in enumerate(source_frames):
@@ -263,6 +324,7 @@ def main() -> None:
             args.duration_sec,
             args.fps,
             preview_dir,
+            anchor_fallback_dir if missing_anchors else None,
         )
         render_preview(preview_dir, audio_path, args.fps, args.output_dir / "preview_4fps.mp4")
 
