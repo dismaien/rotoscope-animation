@@ -1,0 +1,13 @@
+panel_id,frame_number,source_path,category,priority,notes
+001,,,neutral_talking,high,
+002,,,mouth_closed_between_words,high,
+003,,,small_open_mouth,high,
+004,,,wide_open_mouth,high,
+005,,,teeth_visible_speech,high,
+006,,,warm_smile,medium,
+007,,,asymmetrical_smile,medium,
+008,,,blink_or_half_closed_eyes,medium,
+009,,,slight_head_turn_left,medium,
+010,,,slight_head_turn_right,medium,
+011,,,hands_or_jewelry_visible,medium,
+012,,,lighting_variation,high,

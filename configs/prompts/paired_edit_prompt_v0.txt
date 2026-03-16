@@ -1,0 +1,13 @@
+Render the input frame as a high-end painterly rotoscope animation inspired by
+hand-painted early-2000s rotoscope cinema. Keep the subject unmistakably the same
+person: same face shape, same lip fullness, same nose, same eyes, same brow
+shape, same expression, same gaze direction, same head angle, same hair color and
+silhouette, same clothing, same jewelry, and same background composition.
+
+Use bold dark contour lines, intentional painted color regions, visible
+brushstrokes, cinematic color design, and a hand-painted animation feel. Flatter
+through paint handling, color, and finish, not by changing facial structure.
+
+Keep the mouth shape accurate to the source frame. Preserve natural lip fullness.
+Do not narrow the lips, deepen smile lines, exaggerate skin texture, or change
+facial proportions.

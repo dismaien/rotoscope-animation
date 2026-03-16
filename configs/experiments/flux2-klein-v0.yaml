@@ -1,0 +1,79 @@
+experiment:
+  name: flux2-klein-v0-paired-edit
+  owner: dismaien
+  status: draft
+  objective: >
+    Learn a paired subject-preserving painterly rotoscope edit for the interview
+    footage using Nano Banana styled references as supervision.
+  confidence_note: >
+    This is a project-level experiment spec, not a trainer-validated config.
+
+model:
+  family: FLUX.2 klein
+  variant: Base 9B
+  rationale: >
+    First-choice balance of quality ceiling, trainability, and practical paired
+    adaptation for this project-specific v0.
+  license_note: >
+    Confirm current license and intended commercial usage before production use.
+
+dataset:
+  manifest_csv: manifests/nano_pairs.csv
+  source_role: original_interview_frame
+  target_role: nano_banana_styled_frame
+  resolution:
+    width: 1024
+    height: 576
+  caption_strategy:
+    style_prompt_file: configs/prompts/paired_edit_prompt_v0.txt
+    structured_tags:
+      - expression
+      - mouth
+      - eyes
+      - head
+      - hands
+      - lighting
+  split_targets:
+    train_fraction: 0.75
+    val_fraction: 0.10
+    holdout_fraction: 0.15
+  exclusion_rules:
+    - discard pairs with likeness_score below 3
+    - discard pairs with severe structure changes
+    - keep lower-scoring pairs only when they fill a rare expression gap
+
+training:
+  adapter_type: lora
+  total_steps: 2000
+  checkpoint_every_steps: 250
+  batch_size_per_gpu: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0001
+  rank: 32
+  alpha: 32
+  optimizer: adamw
+  weight_decay: 0.01
+  seed: 42
+  mixed_precision: bf16
+  notes:
+    - start with a short smoke test before the full run
+    - save visual evals from fixed holdout frames at each checkpoint
+
+evaluation:
+  benchmark_panel_csv: manifests/benchmark_panel_template.csv
+  review_dimensions:
+    - likeness
+    - expression
+    - flattery
+    - style
+    - structure
+    - production_usefulness
+  gate:
+    minimum_average_likeness: 4.0
+    maximum_broken_frames_on_panel: 2
+
+production_plan:
+  anchor_rate_default_fps: 2
+  anchor_rate_dense_fps: 4
+  propagation_strategy: keyframes_plus_temporal_transfer
+  artistic_note: preserve_controlled_paint_boil
