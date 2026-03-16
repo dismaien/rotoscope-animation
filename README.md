@@ -42,6 +42,7 @@ The project is centered on a hybrid workflow:
 - `tools/transcribe_with_mlx_whisper.py`: local transcript helper for the interview
 - `tools/prepare_ai_toolkit_paired_dataset.py`: convert paired CSVs into ai-toolkit train/val/holdout folders
 - `tools/generate_dense_gemini_clip.py`: bounded dense-anchor generation for short hero clips
+- `tools/build_dense_clip_manifest.py`: fold dense hero-clip outputs back into paired training manifests
 - `configs/`: reserved for training and inference configs
 
 ## Notes
