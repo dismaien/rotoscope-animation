@@ -32,6 +32,7 @@ The project is centered on a hybrid workflow:
 - `configs/experiments/`: experiment specs for training runs
 - `configs/prompts/`: prompt templates and style language
 - `tools/mine_mouth_shapes.py`: candidate miner for rare speaking shapes
+- `tools/mine_mouth_shapes_from_frames.py`: faster miner that works from extracted keyframes
 - `tools/build_pair_manifest.py`: match source and styled frame pairs into a review CSV
 - `tools/extract_frames_from_csv.py`: pull timestamped screenshots from a CSV list
 - `configs/`: reserved for training and inference configs
