@@ -1,0 +1,60 @@
+---
+job: extension
+config:
+  name: "wakinglife_flux_kontext_paired_mps_pilot"
+  process:
+    - type: "sd_trainer"
+      training_folder: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/flux_kontext_paired_mps_pilot"
+      device: mps
+      network:
+        type: "lora"
+        linear: 8
+        linear_alpha: 8
+      save:
+        dtype: float16
+        save_every: 50
+        max_step_saves_to_keep: 4
+        push_to_hub: false
+      datasets:
+        - folder_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/local_pilot_subset_v1/train/styled"
+          control_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/local_pilot_subset_v1/train/control"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.02
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [512]
+      train:
+        batch_size: 1
+        steps: 200
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
+        optimizer: "adamw"
+        lr: 1e-4
+        timestep_type: "weighted"
+        dtype: float16
+      model:
+        name_or_path: "black-forest-labs/FLUX.1-Kontext-dev"
+        arch: "flux_kontext"
+        quantize: true
+        low_vram: true
+      sample:
+        sampler: "flowmatch"
+        sample_every: 50
+        width: 960
+        height: 540
+        prompts:
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_0167.png"
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_0649.png"
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_s0614_q1.png"
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_s0785_q3.png"
+        neg: ""
+        seed: 42
+        walk_seed: false
+        guidance_scale: 4
+        sample_steps: 16
+meta:
+  name: "[name]"
+  version: "1.0"
