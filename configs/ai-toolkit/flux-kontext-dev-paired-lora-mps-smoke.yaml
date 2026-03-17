@@ -1,0 +1,46 @@
+---
+job: extension
+config:
+  name: "wakinglife_flux_kontext_paired_mps_smoke"
+  process:
+    - type: "sd_trainer"
+      training_folder: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/flux_kontext_paired_mps_smoke"
+      device: mps
+      network:
+        type: "lora"
+        linear: 8
+        linear_alpha: 8
+      save:
+        dtype: float16
+        save_every: 1
+        max_step_saves_to_keep: 2
+        push_to_hub: false
+      datasets:
+        - folder_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/train/styled"
+          control_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/train/control"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.0
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [512]
+      train:
+        batch_size: 1
+        steps: 2
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
+        optimizer: "adamw"
+        lr: 1e-4
+        timestep_type: "weighted"
+        disable_sampling: true
+        dtype: float16
+      model:
+        name_or_path: "black-forest-labs/FLUX.1-Kontext-dev"
+        arch: "flux_kontext"
+        quantize: true
+        low_vram: true
+meta:
+  name: "[name]"
+  version: "1.0"
