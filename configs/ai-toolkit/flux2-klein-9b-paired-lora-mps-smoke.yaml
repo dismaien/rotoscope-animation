@@ -37,11 +37,14 @@ config:
         disable_sampling: true
         dtype: float16
       model:
-        name_or_path: "black-forest-labs/FLUX.2-klein-base-9B"
+        name_or_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/flux2_klein_base_9b"
+        te_name_or_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/Qwen3-8B"
+        vae_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/flux2_vae/ae.safetensors"
         arch: "flux2_klein_9b"
         quantize: true
-        quantize_te: true
-        qtype: "qfloat8"
+        quantize_te: false
+        qtype: "uint4"
+        qtype_te: "uint4"
         low_vram: true
         model_kwargs:
           match_target_res: false

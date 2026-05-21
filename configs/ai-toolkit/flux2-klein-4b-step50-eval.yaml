@@ -1,0 +1,37 @@
+job: generate
+config:
+  name: "wakinglife_flux2_klein4b_step50_eval"
+  process:
+    - type: "to_folder"
+      output_folder: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/analysis/step50_eval/raw"
+      device: mps
+      dtype: bf16
+      generate:
+        sampler: "flowmatch"
+        width: 960
+        height: 540
+        neg: ""
+        seed: 42
+        guidance_scale: 3.5
+        sample_steps: 16
+        ext: "png"
+        prompt_file: true
+        prompts:
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. Keep smile lines, nasolabial folds, forehead lines, glabellar 11s, and under-eye creases soft, simplified, and flattering. Favor smooth painted skin planes over crease carving. Reduce harsh facial shadowing and line emphasis across the whole face, especially in the lower face and forehead. Preserve a softly contoured jawline without broadening the lower face. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_0167.png"
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. Keep smile lines, nasolabial folds, forehead lines, glabellar 11s, and under-eye creases soft, simplified, and flattering. Favor smooth painted skin planes over crease carving. Reduce harsh facial shadowing and line emphasis across the whole face, especially in the lower face and forehead. Preserve a softly contoured jawline without broadening the lower face. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_0649.png"
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. Keep smile lines, nasolabial folds, forehead lines, glabellar 11s, and under-eye creases soft, simplified, and flattering. Favor smooth painted skin planes over crease carving. Reduce harsh facial shadowing and line emphasis across the whole face, especially in the lower face and forehead. Preserve a softly contoured jawline without broadening the lower face. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_s0614_q1.png"
+          - "Repaint this interview frame as a cinematic painted rotoscope image with bold dark outlines, visible brushstrokes, soft color blocking, preserved facial structure, preserved lip fullness, and the same courtyard pool setting. Keep smile lines, nasolabial folds, forehead lines, glabellar 11s, and under-eye creases soft, simplified, and flattering. Favor smooth painted skin planes over crease carving. Reduce harsh facial shadowing and line emphasis across the whole face, especially in the lower face and forehead. Preserve a softly contoured jawline without broadening the lower face. --ctrl_img /Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/holdout/control/frame_s0785_q3.png"
+      model:
+        name_or_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/flux2_klein_base_4b"
+        te_name_or_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/Qwen3-4B"
+        vae_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/flux2_vae/ae.safetensors"
+        arch: "flux2_klein_4b"
+        dtype: bf16
+        inference_lora_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/flux2_klein4b_paired_mps_pilot_bf16_nosample/wakinglife_flux2_klein4b_paired_mps_pilot_bf16_nosample/wakinglife_flux2_klein4b_paired_mps_pilot_bf16_nosample_000000050.safetensors"
+        quantize: true
+        quantize_te: false
+        qtype: "uint4"
+        qtype_te: "uint4"
+        low_vram: true
+        model_kwargs:
+          match_target_res: false

@@ -1,0 +1,54 @@
+---
+job: extension
+config:
+  name: "wakinglife_flux2_klein4b_paired_mps_pilot_bf16_nosample"
+  process:
+    - type: "sd_trainer"
+      training_folder: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/flux2_klein4b_paired_mps_pilot_bf16_nosample"
+      device: mps
+      network:
+        type: "lora"
+        linear: 16
+        linear_alpha: 16
+      save:
+        dtype: float16
+        save_every: 50
+        max_step_saves_to_keep: 4
+        push_to_hub: false
+      datasets:
+        - folder_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/local_pilot_subset_v1/train/styled"
+          control_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/local_pilot_subset_v1/train/control"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.02
+          shuffle_tokens: false
+          num_workers: 0
+          cache_latents_to_disk: true
+          resolution: [512]
+      train:
+        batch_size: 1
+        steps: 300
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
+        optimizer: "adamw"
+        lr: 1e-4
+        timestep_type: "weighted"
+        disable_sampling: true
+        dtype: bf16
+      model:
+        name_or_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/flux2_klein_base_4b"
+        te_name_or_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/Qwen3-4B"
+        vae_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/model_bundles/flux2_vae/ae.safetensors"
+        arch: "flux2_klein_4b"
+        quantize: true
+        quantize_te: false
+        qtype: "uint4"
+        qtype_te: "uint4"
+        low_vram: true
+        model_kwargs:
+          match_target_res: false
+meta:
+  name: "[name]"
+  version: "1.0"
