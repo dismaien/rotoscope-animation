@@ -12,7 +12,7 @@ config:
       save:
         dtype: float16
         save_every: 25
-        max_step_saves_to_keep: 8
+        max_step_saves_to_keep: 24
         push_to_hub: false
       datasets:
         - folder_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/train/styled"

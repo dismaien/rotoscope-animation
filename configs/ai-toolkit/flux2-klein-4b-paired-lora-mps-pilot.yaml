@@ -13,7 +13,7 @@ config:
       save:
         dtype: float16
         save_every: 10
-        max_step_saves_to_keep: 8
+        max_step_saves_to_keep: 32
         push_to_hub: false
       datasets:
         - folder_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/local_pilot_subset_v1/train/styled"
