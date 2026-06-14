@@ -11,8 +11,8 @@ config:
         linear_alpha: 16
       save:
         dtype: float16
-        save_every: 25
-        max_step_saves_to_keep: 24
+        save_every: 10
+        max_step_saves_to_keep: 60
         push_to_hub: false
       datasets:
         - folder_path: "/Users/leona/Documents/Playground/painterly-rotoscope-animation/runs/datasets/flux2_klein_v0_plus_dense_three/train/styled"
@@ -25,7 +25,7 @@ config:
           resolution: [512]
       train:
         batch_size: 1
-        steps: 800
+        steps: 500
         gradient_accumulation_steps: 1
         train_unet: true
         train_text_encoder: false
